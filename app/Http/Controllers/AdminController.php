@@ -1,30 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Document;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class AgentController extends Controller
+use Illuminate\Http\Request;
+
+class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $user = Auth::user();
-        $serviceId = $user->service_id;
-
-        // Statistiques du service
         $stats = [
-            'total'    => Document::where('service_id', $serviceId)->count(),
-            'entrants' => Document::where('service_id', $serviceId)->where('type', 'entrant')->count(),
-            'sortants' => Document::where('service_id', $serviceId)->where('type', 'sortant')->count(),
-            'internes' => Document::where('service_id', $serviceId)->where('type', 'interne')->count(),
-            'recent'   => Document::where('service_id', $serviceId)->latest()->take(5)->get(),
-        ];
+        'users_count'    => \App\Models\User::count(),
+        'services_count' => \App\Models\Service::count(),
+        'docs_count'     => \App\Models\Document::count(),
+        'recent_docs'    => \App\Models\Document::with('user')->latest()->take(5)->get(),
+    ];
 
-        return view('agent.dashboard', compact('stats'));
+    return view('admin.dashboard', compact('stats'));
     }
 
     /**
@@ -74,5 +68,4 @@ class AgentController extends Controller
     {
         //
     }
-    
 }

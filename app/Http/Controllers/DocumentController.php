@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Document;
+use App\Models\History;
 class DocumentController extends Controller
 {
     public function index(Request $request) 
@@ -15,15 +17,11 @@ class DocumentController extends Controller
     if ($user && $user->service_id) {
         $query->where('service_id', $user->service_id);
     }
-
     // 2. On filtre pour que l'agent ne voie QUE les documents de son service
-    // On vérifie quand même que l'utilisateur a bien un service_id pour éviter un crash
     if ($user->service_id) {
         $query->where('service_id', $user->service_id);
     }
-
     // 3. LOGIQUE DE RECHERCHE
-    // Maintenant $request est reconnu !
     if ($request->filled('search')) {
         $search = $request->search;
 
@@ -32,9 +30,7 @@ class DocumentController extends Controller
               ->orWhere('reference', 'LIKE', "%{$search}%");
         });
     }
-
     $documents = $query->latest()->paginate(10);
-
     return view('agent.document.index', compact('documents')); 
 }
 
@@ -44,33 +40,48 @@ class DocumentController extends Controller
     }       
 
     public function store(Request $request)
-{
-    $request->validate([
+{$request->validate([
         'reference' => 'required|unique:documents,reference',
         'title' => 'required|string|max:255',
         'type' => 'required|in:entrant,sortant,interne',
-        'file' => 'required|mimes:pdf,jpg,png|max:5120', // Limite à 5Mo
+        'file' => 'required|mimes:pdf,jpg,doc,docx,png|max:5120',
     ]);
 
     if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('archives/' . date('Y'), 'public');
+        $chrono = $request->reference; 
+        $path = $request->file('file')->store('archives/' . date('Y'), 'public');
+        $document = Document::create([
+            'reference'  => $request->reference,
+            'title'      => $request->title,
+            'type'       => $request->type,
+            'file_path'  => $path,
+            'year'       => date('Y'),
+            'user_id'    => Auth::id(), // Utilisation de la façade Auth avec majuscule
+            'service_id' => Auth::user()->service_id, 
+        ]);
+        History::create([
+            'user_id' => Auth::id(),
+            'service_id' => Auth::user()->service_id,
+            'action' => 'Création',
+            'document_title' => $request->title,
+            'document_ref' => $chrono, // Maintenant $chrono existe
+            'ip_address' => $request->ip(),
+        ]);
 
-            // 3. Création de l'enregistrement en base de données
-            Document::create([
-                'reference'  => $request->reference,
-                'title'      => $request->title,
-                'type'       => $request->type,
-                'file_path'  => $path,
-                'year'       => date('Y'), // On règle ton erreur "Field year doesn't have a default value"
-                'user_id'    => auth::id(), // L'ID de l'agent qui crée
-                'service_id' => auth::user()->service_id, // On récupère le service de l'agent
-            ]);
+        return redirect()->route('agent.document.index')
+                         ->with('success', 'Le document a été archivé avec succès !');
+    }
+    return back()->with('error', 'Le fichier est manquant.');
+}   
 
-            return redirect()->route('agent.document.index')
-                             ->with('success', 'Le document a été archivé avec succès !');
-        }
+public function history()
+    {
+        $histories = History::where('service_id', Auth::user()->service_id)
+                            ->with('user')
+                            ->latest()
+                            ->paginate(15);
 
-        return back()->with('error', 'Le fichier est manquant.');
+        return view('agent.history', compact('histories'));
     }
 
     public function edit($id)

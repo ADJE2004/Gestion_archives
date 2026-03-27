@@ -32,13 +32,13 @@
                             <option value="interne">Note Interne</option>
                         </select>
                     </div>
-
+                        
                     <div>
-                        <x-input-label for="file" :value="__('Fichier Scanné (PDF, JPG, PNG)')" />
-                        <input id="file" name="file" type="file" class="mt-1 block w-full border border-gray-300 p-2 rounded-md" required />
+                        <x-input-label for="file" :value="__('Fichier du document (PDF, max 10MB)')" />
+                        <x-text-input id="file" name="file" type="file" class="mt-1 block w-full" accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
                         <x-input-error :messages="$errors->get('file')" class="mt-2" />
                     </div>
-
+                    
                     <div class="flex items-center gap-4">
                         <x-primary-button>{{ __('Enregistrer le document ') }}</x-primary-button>
                         <a href="{{ route('agent.document.index') }}" class="text-sm text-gray-600 hover:underline">Annuler</a>

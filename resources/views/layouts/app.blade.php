@@ -17,10 +17,13 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased bg-gray-100">
+    <div class="flex min-h-screen">
+        @include('layouts.sidebar')
 
+        <div class="flex-1 flex flex-col">
+            
+            {{-- @include('layouts.navigation') --}}
             <!-- Page Heading -->
             @isset($header)
                 <header class="bg-white shadow">

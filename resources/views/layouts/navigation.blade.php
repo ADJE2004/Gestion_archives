@@ -21,7 +21,7 @@
                     <x-nav-link :href="route('agent.document.index')" :active="request()->routeIs('agent.document.index')">
                        {{ __('Documents') }}
                     </x-nav-link>
-                         <x-nav-link :href="route('agent.historiques')" :active="request()->routeIs('agent.historique')">
+                         <x-nav-link :href="route('agent.history')" :active="request()->routeIs('agent.historique')">
                        {{ __('Historique') }}
                     </x-nav-link>
 

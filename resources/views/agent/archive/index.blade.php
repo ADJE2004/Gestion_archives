@@ -70,15 +70,17 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        <a href="{{ route('agent.archive.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded shadow">
+                        {{-- <a href="{{ route('agent.archive.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded shadow">
                           <i class="fas fa-file-upload mr-2"></i> Archiver un document (PDF)
-                         </a>
+                         </a> --}}
                     </div>
-
+ 
                     <div class="mt-4">
                         {{ $archives->appends(request()->query())->links() }}
                     </div>
-
+<a href="{{ route('agent.archive.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded shadow">
+                          <i class="fas fa-file-upload mr-2"></i> Archiver un document (PDF)
+                         </a>
                 </div>
             </div>
         </div>

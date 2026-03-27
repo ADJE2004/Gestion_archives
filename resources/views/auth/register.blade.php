@@ -1,7 +1,15 @@
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
-
+{{-- @if ($errors->any())
+    <div style="background: red; color: white; padding: 15px; margin-bottom: 20px;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif --}}
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
