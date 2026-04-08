@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Tableau de Bord Administrateur') }}
+            {{ __('Bienvenue Administrateur') }}
         </h2>
     </x-slot>
 
@@ -39,7 +39,20 @@
                     </div>
                 </div>
             </div>
-
+<div class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8">
+            <div class="max-w-sm w-full bg-neutral-primary-soft border border-default rounded-base shadow-xs p-4 md:p-6">
+  <div class="flex justify-between items-start">
+    <div>
+      <h5 class="text-2xl font-semibold text-heading">32.4k</h5>
+      <div id="area-chart"></div>
+      <p class="text-body">Users this week</p>
+    </div>
+    <div class="flex items-center px-2.5 py-0.5 font-medium text-fg-success text-center">
+      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v13m0-13 4 4m-4-4-4 4"/></svg>
+      12%
+    </div>
+  </div>
+</div>
             <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h3 class="font-bold text-lg mb-4">Derniers documents archivés (Global)</h3>
@@ -68,4 +81,23 @@
 
         </div>
     </div>
+
+@push('scripts')
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+      const options = {
+          series: [{ name: "Docs", data: [10, 41, 35, 51, 49] }],
+          chart: { type: 'area', height: 300 },
+          xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'] }
+      };
+      const chart = new ApexCharts(document.querySelector("#area-chart"), options);
+      chart.render();
+  });
+</script>
+@endpush
+
+
+
 </x-app-layout>
+
+

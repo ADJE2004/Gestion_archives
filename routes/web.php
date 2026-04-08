@@ -35,7 +35,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/documents', 'store')->name('document.store');
         Route::get('/documents/{id}', 'show')->name('document.show');
         Route::put('/documents/{id}/editer', 'edit')->name('document.edit');
-      //  Route::put('/documents/{id}', 'update')->name('document.update');
         Route::delete('/documents/{id}', 'destroy')->name('document.destroy');
         Route::get('/historiques', 'history')->name('history');
     });

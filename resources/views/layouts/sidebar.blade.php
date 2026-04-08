@@ -14,9 +14,12 @@
             <a href="{{ route('admin.users.index') }}" class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400">
                 <i class="fas fa-users-cog mr-3"></i> Utilisateurs
             </a>
+            <a href="{{ route('admin.users.index') }}" class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400">
+                <i class="fas fa-users-cog mr-3"></i> Paramètre
+            </a>
         @endif
 
-        @if(in_array(Auth::user()->role, ['agent', 'chef']))
+        {{-- @if(in_array(Auth::user()->role, ['agent', 'chef']))
             <div class="pt-4 pb-2 text-xs font-semibold text-gray-600 uppercase"></div>
             <a href="{{ route('agent.document.index') }}" class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400">
                 <i class="fas fa-file-invoice mr-3"></i> Mes documents
@@ -24,7 +27,74 @@
             <a href="{{ route('agent.archive.create') }}" class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400">
                 <i class="fas fa-plus-circle mr-3"></i> Mes archives
             </a>
-        @endif
+        @endif --}}
+
+        <div x-data="{ open: {{ request()->routeIs('agent.*') ? 'true' : 'false' }} }" class="px-3">
+        <button @click="open = !open" 
+                class="flex items-center justify-between w-full p-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 group">
+            <div class="flex items-center">
+                <i class="fas fa-folder-open mr-3 text-lg group-hover:text-white"></i>
+                <span class="group-hover:text-white font-medium">Documents</span>
+            </div>
+            
+            <svg :class="{'rotate-180': open}" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </button>
+
+        <div x-show="open" 
+             x-cloak 
+             x-transition:enter="transition ease-out duration-100"
+             x-transition:enter-start="transform opacity-0 scale-95"
+             x-transition:enter-end="transform opacity-100 scale-100"
+             class="mt-1 ml-4 space-y-1 border-l-2 border-gray-700">
+            
+            <a href="{{ route('agent.document.index') }}" 
+               class="flex items-center p-2 pl-6 rounded-r-lg transition-colors hover:bg-gray-800 group {{ request()->routeIs('agent.document.index') ? 'text-white bg-gray-800' : 'text-gray-500' }}">
+                <i class="fas fa-file-invoice mr-3 text-sm"></i>
+                <span class="text-sm">Mes documents</span>
+            </a>
+
+            <a href="{{ route('agent.document.create') }}" 
+               class="flex items-center p-2 pl-6 rounded-r-lg transition-colors hover:bg-gray-800 group {{ request()->routeIs('agent.archive.create') ? 'text-white bg-gray-800' : 'text-gray-500' }}">
+                <i class="fas fa-plus-circle mr-3 text-sm"></i>
+                <span class="text-sm">Nouveau doc</span>
+            </a>
+        </div>
+        </div>
+
+        <div x-data="{ open: {{ request()->routeIs('agent.*') ? 'true' : 'false' }} }" class="px-3">
+             <button @click="open = !open" 
+                class="flex items-center justify-between w-full p-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 group">
+            <div class="flex items-center">
+                <i class="fas fa-folder-open mr-3 text-lg group-hover:text-white"></i>
+                <span class="group-hover:text-white font-medium">Archives</span>
+            </div>
+            
+            <svg :class="{'rotate-180': open}" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+             </button>
+         <div x-show="open" 
+             x-cloak 
+             x-transition:enter="transition ease-out duration-100"
+             x-transition:enter-start="transform opacity-0 scale-95"
+             x-transition:enter-end="transform opacity-100 scale-100"
+             class="mt-1 ml-4 space-y-1 border-l-2 border-gray-700">
+            
+            <a href="{{ route('agent.archive.index') }}" 
+               class="flex items-center p-2 pl-6 rounded-r-lg transition-colors hover:bg-gray-800 group {{ request()->routeIs('agent.document.index') ? 'text-white bg-gray-800' : 'text-gray-500' }}">
+                <i class="fas fa-file-invoice mr-3 text-sm"></i>
+                <span class="text-sm">Mes archives</span>
+            </a>
+
+            <a href="{{ route('agent.archive.create') }}" 
+               class="flex items-center p-2 pl-6 rounded-r-lg transition-colors hover:bg-gray-800 group {{ request()->routeIs('agent.archive.create') ? 'text-white bg-gray-800' : 'text-gray-500' }}">
+                <i class="fas fa-plus-circle mr-3 text-sm"></i>
+                <span class="text-sm">Nouvel archive</span>
+            </a>
+          </div>
+        </div>
     </nav>
 
     <div class="p-4 border-t border-gray-800 bg-gray-900">
