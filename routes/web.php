@@ -6,6 +6,9 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\AdminController;
+//use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\UserController;  
 
 
     Route::get('/', function () {
@@ -15,15 +18,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
+ // )};
+   Route::middleware(['auth', \App\Http\Middleware\Redirect::class])->group(function () {
     Route::get('/dashboard', function () {
-    $user = auth()->user();
-    if ($user->role === 'admin') return redirect()->route('admin.dashboard');
-    if ($user->role === 'chef') return redirect()->route('chef.dashboard');
-    return redirect()->route('agent.dashboard');
-    })->middleware(['auth'])->name('dashboard');
- 
+        // Cette partie ne sera techniquement jamais atteinte car le middleware redirige avant
+    })->name('dashboard');
+    Route::get('/agent/dashboard', [AgentController::class, 'index'])->name('agent.dashboard');
+    //Route::get('/chef/dashboard', [ChefController::class, 'index'])->name('chef.dashboard');
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+ });
     // 4. ESPACE AGENT (Opérations d'archivage)
     Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->group(function () {
     Route::get('/dashboard', [AgentController::class, 'index'])->name('dashboard');
@@ -40,19 +43,18 @@ Route::middleware('auth')->group(function () {
     });
 
     // Archives
-    Route::controller(ArchiveController::class)->group(function () {
+        Route::controller(ArchiveController::class)->group(function () {
         Route::get('/archives', 'index')->name('archive.index');
         Route::post('/archives', 'store')->name('archive.store');
         Route::get ('/archives/creer', 'create')->name('archive.create');
         });
 });
 // 2. ESPACE ADMINISTRATEUR (Gestion globale)
-       Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-       Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    Route::get('/users', [AdminController::class, 'manageUsers'])->name('users.index');
-//     Route::get('/services', [AdminController::class, 'manageServices'])->name('services.index');
-//     Route::get('/audit-logs', [AdminController::class, 'globalHistory'])->name('history');
- });
+    Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::resource('users', UserController::class);
+        Route::resource('services', ServiceController::class);
+        });
 
 // 3. ESPACE CHEF DE SERVICE (Supervision du service)
         // Route::middleware(['auth', 'role:chef'])->prefix('chef')->name('chef.')->group(function () {
@@ -60,5 +62,5 @@ Route::middleware('auth')->group(function () {
         // Route::get('/service/agents', [ChefController::class, 'myAgents'])->name('agents');
         // Route::get('/service/historique', [ChefController::class, 'serviceHistory'])->name('history');
         // });
-
+});
 require __DIR__.'/auth.php';

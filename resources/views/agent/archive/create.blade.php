@@ -24,14 +24,14 @@
                     </div>
 
                     <div>
-                        <x-input-label for="title" :value="__('Objet / Titre du document')" />
-                        <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title')" required />
-                        <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                        <x-input-label for="titre" :value="__('Objet / Titre du document')" />
+                        <x-text-input id="titre" name="titre" type="text" class="mt-1 block w-full" :value="old('titre')" required />
+                        <x-input-error :messages="$errors->get('titre')" class="mt-2" />
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <x-input-label for="type" :value="__('Catégorie')" />
+                            <x-input-label for="type" :value="__('Categorie')" />
                             <select id="type" name="type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500">
                                 <option value="entrant">Courrier Entrant</option>
                                 <option value="sortant">Courrier Sortant</option>
@@ -57,4 +57,14 @@
             </div>
         </div>
     </div>
+
+    @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 </x-app-layout>

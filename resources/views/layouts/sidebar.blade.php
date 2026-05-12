@@ -9,26 +9,90 @@
             <i class="fas fa-home mr-3"></i> Dashboard
         </a>
 
-        @if(Auth::user()->role === 'admin')
-            <div class="pt-4 pb-2 text-xs font-semibold text-gray-600 uppercase">Administration</div>
-            <a href="{{ route('admin.users.index') }}" class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400">
-                <i class="fas fa-users-cog mr-3"></i> Utilisateurs
-            </a>
-            <a href="{{ route('admin.users.index') }}" class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400">
-                <i class="fas fa-users-cog mr-3"></i> Paramètre
-            </a>
-        @endif
+     @if(Auth::user()->role === 'admin')
+        <div class="pt-4 pb-2 text-xs font-semibold text-gray-600 uppercase">Administration</div>
+          
+         <div x-data="{ open: {{ request()->routeIs('admin.services.*') ? 'true' : 'false' }} }" class="px-3 mb-2">
+             <button @click="open = !open" 
+                class="flex items-center justify-between w-full p-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 group focus:outline-none">
+            
+                <div class="flex items-center">
+                    <i class="fas fa-users-cog mr-3 text-lg group-hover:text-blue-400"></i>
+                    <span class="group-hover:text-white text-sm font-medium">Gestion-Services</span>
+                </div>
+        
+                <svg :class="{'rotate-180': open}" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+             </button>
+                <div x-show="open" 
+                    x-cloak 
+                    x-transition:enter="transition ease-out duration-100"
+                    class="mt-1 ml-4 space-y-1 border-l-2 border-gray-700">
+                    
+                    <a href="{{ route('admin.services.index') }}" 
+                    class="flex items-center p-2 pl-6 rounded-r-lg transition-colors hover:bg-gray-800 group {{ request()->routeIs('admin.services.index') ? 'text-white bg-gray-800 border-l-2 border-green-500 -ml-[2px]' : 'text-gray-500 hover:text-gray-300' }}">
+                        <i class="fas fa-list mr-3 text-xs"></i>
+                        <span class="text-sm">Services list</span>
+                    </a>
 
-        {{-- @if(in_array(Auth::user()->role, ['agent', 'chef']))
-            <div class="pt-4 pb-2 text-xs font-semibold text-gray-600 uppercase"></div>
-            <a href="{{ route('agent.document.index') }}" class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400">
-                <i class="fas fa-file-invoice mr-3"></i> Mes documents
-            </a>
-            <a href="{{ route('agent.archive.create') }}" class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400">
-                <i class="fas fa-plus-circle mr-3"></i> Mes archives
-            </a>
-        @endif --}}
+                    <a href="{{ route('admin.services.create') }}" 
+                         class="flex items-center p-2 pl-6 rounded-r-lg transition-colors hover:bg-gray-800 group text-gray-500 hover:text-gray-300">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span class="text-sm">Add a service</span>
+                    </a>
+                </div>
+            </div>
 
+  <div x-data="{ open: {{ request()->routeIs('admin.users.*') ? 'true' : 'false' }} }" class="px-3 mb-2">
+ <button @click="open = !open" 
+                class="flex items-center justify-between w-full p-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 group focus:outline-none">
+                <div class="flex items-center">
+                    <i class="fas fa-users-cog mr-3 text-lg group-hover:text-blue-400"></i>
+                    <span class="group-hover:text-white text-sm font-medium">Gestion users</span>
+                </div>
+        
+                <svg :class="{'rotate-180': open}" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+             </button>
+                <div x-show="open" 
+                    x-cloak 
+                    x-transition:enter="transition ease-out duration-100"
+                    class="mt-1 ml-4 space-y-1 border-l-2 border-gray-700">
+                    
+                    <a href="{{ route('admin.users.index') }}" 
+                    class="flex items-center p-2 pl-6 rounded-r-lg transition-colors hover:bg-gray-800 group {{ request()->routeIs('admin.services.index') ? 'text-white bg-gray-800 border-l-2 border-green-500 -ml-[2px]' : 'text-gray-500 hover:text-gray-300' }}">
+                        <i class="fas fa-list mr-3 text-xs"></i>
+                        <span class="text-sm">User list</span>
+                    </a>
+
+                    <a href="{{ route('admin.users.create') }}" 
+                         class="flex items-center p-2 pl-6 rounded-r-lg transition-colors hover:bg-gray-800 group text-gray-500 hover:text-gray-300">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span class="text-sm">Add a user</span>
+                    </a>
+                </div>
+            </div>
+    <div x-data="{ open: false }" class="px-3 mb-2">
+    <button @click="open = !open" class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-800 text-gray-400 group">
+        <div class="flex items-center whitespace-nowrap">
+            <i class="fas fa-cogs mr-3 text-lg group-hover:text-orange-400"></i>
+            <span class="group-hover:text-white font-medium text-sm">Paramètres</span>
+        </div>
+        <svg :class="{'rotate-180': open}" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+    </button>
+
+    <div x-show="open" x-cloak class="mt-1 ml-4 border-l-2 border-gray-700 space-y-1">
+        <a href="#" class="block p-2 pl-6 text-sm text-gray-500 hover:text-white">Configuration Générale</a>
+        <a href="#" class="block p-2 pl-6 text-sm text-gray-500 hover:text-white">Rôles & Permissions</a>
+        <a href="#" class="block p-2 pl-6 text-sm text-gray-500 hover:text-white">Journal d'activités</a>
+    </div>
+</div>
+@endif
+
+
+    @if(Auth::user()->role !== 'admin')
         <div x-data="{ open: {{ request()->routeIs('agent.*') ? 'true' : 'false' }} }" class="px-3">
         <button @click="open = !open" 
                 class="flex items-center justify-between w-full p-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 group">
@@ -95,6 +159,7 @@
             </a>
           </div>
         </div>
+        @endif
     </nav>
 
     <div class="p-4 border-t border-gray-800 bg-gray-900">

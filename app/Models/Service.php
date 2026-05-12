@@ -8,12 +8,12 @@ class Service extends Model
 {
     protected $fillable = ['name', 'description','responsable'];
 
-public function users()
-{
-    return $this->hasMany(User::class);
-}
-public function documents()
-{
-    return $this->hasMany(Document::class);
-}
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
 }

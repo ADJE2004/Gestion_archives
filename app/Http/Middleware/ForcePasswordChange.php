@@ -13,14 +13,17 @@ class ForcePasswordChange
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
+         $user = auth()->user();
         // Si l'utilisateur est connecté ET qu'il doit changer son MDP
-        // ET qu'il n'est pas déjà sur la page de profil ou en train de sauvegarder
-    if (auth()->check() && auth()->user()->must_change_password && !$request->routeIs('profile.*')) {
-        return redirect()->route('profile.edit')
-            ->with('warning', 'Pour votre sécurité, changez votre mot de passe provisoire.');
-    }
+     if ($user && $user->must_change_password && $user->role !== 'admin')  {
+        if (!$request->is('password/change*') ) {
+            return redirect()->route('password.change')
+                             ->with('info', 'Pour votre sécurité, changez votre mot de passe.');
+        }
+     }
         return $next($request);
+    
     }
 }

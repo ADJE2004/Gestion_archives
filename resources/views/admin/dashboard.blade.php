@@ -83,16 +83,52 @@
     </div>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-      const options = {
-          series: [{ name: "Docs", data: [10, 41, 35, 51, 49] }],
-          chart: { type: 'area', height: 300 },
-          xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'] }
-      };
-      const chart = new ApexCharts(document.querySelector("#area-chart"), options);
-      chart.render();
-  });
+  document.addEventListener("DOMContentLoaded", function() {
+        const options = {
+            chart: {
+                height: "150px",
+                maxWidth: "100%",
+                type: "area",
+                fontFamily: "Inter, sans-serif",
+                dropShadow: { enabled: false },
+                toolbar: { show: false },
+            },
+            tooltip: { enabled: true, x: { show: false } },
+            fill: {
+                type: "gradient",
+                gradient: {
+                    opacityFrom: 0.55,
+                    opacityTo: 0,
+                    shade: "#1C64F2",
+                    gradientToColors: ["#1C64F2"],
+                },
+            },
+            dataLabels: { enabled: false },
+            stroke: { width: 4, curve: "smooth" },
+            grid: { show: false },
+            series: [
+                {
+                    name: "Users",
+                    data: [6500, 6418, 6456, 6526, 6356, 6456],
+                    color: "#1A56DB",
+                },
+            ],
+            xaxis: {
+                categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                labels: { show: false },
+                axisBorder: { show: false },
+                axisTicks: { show: false },
+            },
+            yaxis: { show: false },
+        };
+
+        if (document.getElementById("area-chart") && typeof ApexCharts !== 'undefined') {
+            const chart = new ApexCharts(document.getElementById("area-chart"), options);
+            chart.render();
+        }
+    });
 </script>
 @endpush
 

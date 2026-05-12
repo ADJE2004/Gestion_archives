@@ -12,13 +12,15 @@ class Document extends Model
     use HasFactory;
     protected $fillable = [
         'reference',
-        'title',
+        'titre',
         'file_path',
         'type',
         'year',
         'status',
         'service_id',
-        'user_id'
+        'user_id',
+        'origine', 
+        'emplacement_physique'
     ];
 
     public function service()

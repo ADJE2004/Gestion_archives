@@ -18,7 +18,6 @@ return new class extends Migration
         $table->string('type')->nullable();
         $table->year('year');
         $table->enum('status', ['active', 'archived'])->default('active');
-
         $table->foreignId('service_id')->constrained()->onDelete('cascade');
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
